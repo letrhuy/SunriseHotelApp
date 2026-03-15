@@ -2,9 +2,6 @@
 @{
     ViewData["Title"] = "Thanh toán";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-
-    // Lấy dữ liệu đã tính toán sẵn từ Controller gửi sang (ViewBag)
-    // Để đảm bảo số liệu chính xác tuyệt đối
     int days = ViewBag.Days ?? 1;
     decimal roomTotal = ViewBag.RoomTotal ?? 0;
     decimal serviceTotal = ViewBag.ServiceTotal ?? 0;

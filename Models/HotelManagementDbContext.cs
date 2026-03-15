@@ -6,7 +6,8 @@ namespace SunriseHotelApp.Models;
 
 public partial class HotelManagementDbContext : DbContext
 {
-    public HotelManagementDbContext() { }
+    public HotelManagementDbContext()
+    { }
 
     public HotelManagementDbContext(DbContextOptions<HotelManagementDbContext> options)
         : base(options) { }
@@ -26,11 +27,16 @@ public partial class HotelManagementDbContext : DbContext
     public virtual DbSet<Notification> Notifications { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=.;Database=HotelManagementDB;Trusted_Connection=True;TrustServerCertificate=True;");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("Server=.;Database=HotelManagementDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // 1. Cấu hình Đơn đặt phòng (Booking)
+
         modelBuilder.Entity<Booking>(entity =>
         {
             entity.HasKey(e => e.BookingId);
@@ -51,12 +57,11 @@ public partial class HotelManagementDbContext : DbContext
             entity.HasOne(d => d.Room).WithMany(p => p.Bookings).HasForeignKey(d => d.RoomId);
         });
 
-        // 2. Cấu hình Dịch vụ phòng (BookingService)
+
         modelBuilder.Entity<BookingService>(entity =>
         {
             entity.ToTable("BookingServices");
             entity.HasKey(e => e.BookingServiceID);
-
             entity.Property(e => e.BookingServiceID).HasColumnName("BookingServiceID");
             entity.Property(e => e.BookingId).HasColumnName("BookingID");
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
@@ -67,25 +72,21 @@ public partial class HotelManagementDbContext : DbContext
                 .HasForeignKey(d => d.BookingId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(d => d.Product)
-                .WithMany()
-                .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK_BookingServices_Products");
+            entity.HasOne(d => d.Product).WithMany().HasForeignKey(d => d.ProductId);
         });
 
-        // 3. Cấu hình Sản phẩm/Kho (Product)
+
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.ProductId);
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.ProductName).HasMaxLength(100);
-            entity.Property(e => e.Unit).HasMaxLength(20);
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.CurrentStock).HasDefaultValue(0);
             entity.Property(e => e.MinStockLevel).HasDefaultValue(5);
         });
 
-        // 4. Cấu hình Khách hàng (Customer)
+
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.CustomerId);
@@ -95,7 +96,7 @@ public partial class HotelManagementDbContext : DbContext
             entity.Property(e => e.Nationality).HasDefaultValue("Vietnam");
         });
 
-        // 5. Cấu hình Phòng (Room)
+
         modelBuilder.Entity<Room>(entity =>
         {
             entity.HasKey(e => e.RoomId);
@@ -106,21 +107,21 @@ public partial class HotelManagementDbContext : DbContext
             entity.HasOne(d => d.RoomType).WithMany(p => p.Rooms).HasForeignKey(d => d.RoomTypeId);
         });
 
-        // 6. Cấu hình Thông báo (Notification)
+ 
         modelBuilder.Entity<Notification>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
         });
 
-        // 7. Cấu hình Loại phòng (RoomType)
+
         modelBuilder.Entity<RoomType>(entity =>
         {
             entity.HasKey(e => e.RoomTypeID);
             entity.Property(e => e.PricePerNight).HasColumnType("decimal(18, 2)");
         });
 
-        // 8. Cấu hình Phiếu nhập (ImportReceipt)
+
         modelBuilder.Entity<ImportReceipt>(entity =>
         {
             entity.HasKey(e => e.ReceiptId);
@@ -131,7 +132,7 @@ public partial class HotelManagementDbContext : DbContext
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
         });
 
-        // 9. Cấu hình Chi tiết phiếu nhập (ImportReceiptDetail)
+  
         modelBuilder.Entity<ImportReceiptDetail>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -141,29 +142,26 @@ public partial class HotelManagementDbContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.ReceiptId).HasColumnName("ReceiptID");
 
-            entity.HasOne(d => d.ImportReceipt)
-                .WithMany(p => p.ImportReceiptDetails)
-                .HasForeignKey(d => d.ReceiptId)
-                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(d => d.ImportReceipt).WithMany(p => p.ImportReceiptDetails)
+                .HasForeignKey(d => d.ReceiptId).OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(d => d.Product)
-                .WithMany()
-                .HasForeignKey(d => d.ProductId);
+            entity.HasOne(d => d.Product).WithMany().HasForeignKey(d => d.ProductId);
         });
 
-        // 10. Cấu hình Nhà cung cấp (Supplier)
+ 
         modelBuilder.Entity<Supplier>(entity =>
         {
             entity.HasKey(e => e.SupplierId);
             entity.Property(e => e.SupplierName).HasMaxLength(200);
         });
 
-        // 11. Cấu hình Khuyến mãi (Promotion)
+
         modelBuilder.Entity<Promotion>(entity =>
         {
             entity.Property(e => e.DiscountPercent).HasColumnType("decimal(18, 2)");
         });
 
+    
         OnModelCreatingPartial(modelBuilder);
     }
 

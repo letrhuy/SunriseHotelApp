@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SunriseHotelApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a61ba0962d235cfba51138016f81d128a31b22d1")]
 [assembly: System.Reflection.AssemblyProductAttribute("SunriseHotelApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SunriseHotelApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

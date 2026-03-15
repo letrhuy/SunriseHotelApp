@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SunriseHotelApp.Models
@@ -10,9 +8,9 @@ namespace SunriseHotelApp.Models
         [Key]
         public int Id { get; set; }
 
-        public int ReceiptId { get; set; } // Khóa ngoại tới Phiếu nhập
+        public int ReceiptId { get; set; } 
 
-        public int ProductId { get; set; } // Khóa ngoại tới Sản phẩm
+        public int ProductId { get; set; } 
 
         public decimal ImportPrice { get; set; }
 
@@ -20,8 +18,6 @@ namespace SunriseHotelApp.Models
 
         public decimal SubTotal { get; set; }
 
-        // --- CÁC THUỘC TÍNH ĐIỀU HƯỚNG (NAVIGATION PROPERTIES) ---
-        // Thêm dòng này để sửa lỗi "does not contain a definition for ImportReceipt"
         [ForeignKey("ReceiptId")]
         public virtual ImportReceipt? ImportReceipt { get; set; }
 

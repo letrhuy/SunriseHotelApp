@@ -2,12 +2,10 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
-    // 1. LẤY THÔNG TIN TỪ SESSION
     var currentUsername = HttpContextAccessor.HttpContext.Session.GetString("UserName");
     var currentFullName = HttpContextAccessor.HttpContext.Session.GetString("FullName") ?? "Quản trị viên";
     var currentRole = HttpContextAccessor.HttpContext.Session.GetString("Role") ?? "Staff";
 
-    // 2. BẢO MẬT: NẾU CHƯA ĐĂNG NHẬP -> CHUYỂN VỀ LOGIN
     if (string.IsNullOrEmpty(currentUsername))
     {
         Context.Response.Redirect("/Account/Login");
@@ -270,13 +268,11 @@
                 });
             }
 
-            // Gọi API ngay khi mở trang
             loadNotifications();
 
-            // Đánh dấu đã đọc khi click
             $(document).on('click', '.notification-item.unread', function (e) {
                 e.preventDefault();
-                e.stopPropagation(); // Giữ menu không bị đóng
+                e.stopPropagation();
                 var id = $(this).data('id');
                 var $thisItem = $(this);
 

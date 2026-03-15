@@ -15,7 +15,7 @@ namespace SunriseHotelApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // 1. Kiểm tra đăng nhập 
+            // 1. Kiểm tra đăng nhập
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserName")))
             {
                 return RedirectToAction("Login", "Account");
@@ -28,11 +28,11 @@ namespace SunriseHotelApp.Controllers
                 .Where(b => b.BookingStatus == "Completed" && b.CheckOutDate.Date == today)
                 .SumAsync(b => b.TotalAmount);
 
-            // B. Đếm số phòng đang có khách 
+            // B. Đếm số phòng đang có khách
             var occupiedCount = await _context.Rooms.CountAsync(r => r.RoomStatus == "Occupied");
             var totalRooms = await _context.Rooms.CountAsync();
 
-            // C. Cảnh báo kho 
+            // C. Cảnh báo kho
             var lowStockCount = await _context.Products.CountAsync(p => p.CurrentStock <= p.MinStockLevel);
 
             ViewBag.DailyRevenue = dailyRevenue;
@@ -44,20 +44,15 @@ namespace SunriseHotelApp.Controllers
             return View();
         }
 
-        // ==========================================
-        // THÊM HÀM "GIẢ" ĐỂ CHỐNG LỖI 404 Ở FRONTEND
-        // ==========================================
         [HttpGet]
         public IActionResult GetUnreadNotifications()
         {
-            // Trả về danh sách rỗng để JavaScript không bị lỗi 404
             return Json(new List<object>());
         }
 
         [HttpPost]
         public IActionResult MarkAsRead(int id)
         {
-            // Trả về OK để JavaScript không báo lỗi
             return Ok();
         }
 
@@ -93,19 +88,15 @@ namespace SunriseHotelApp.Controllers
         [HttpGet]
         public async Task<IActionResult> EmployeeReport(string? roleFilter)
         {
-            // Lấy toàn bộ danh sách nhân viên
             var query = _context.SystemUsers.AsQueryable();
 
-            // Nếu người dùng có chọn chức vụ để lọc thì áp dụng bộ lọc
             if (!string.IsNullOrEmpty(roleFilter))
             {
                 query = query.Where(u => u.UserRole == roleFilter);
             }
 
-            // Sắp xếp theo chức vụ rồi đến tên
             var employees = await query.OrderBy(u => u.UserRole).ThenBy(u => u.FullName).ToListAsync();
 
-            // Truyền dữ liệu ra View
             ViewBag.TotalEmployees = employees.Count;
             ViewBag.CurrentRoleFilter = roleFilter;
 

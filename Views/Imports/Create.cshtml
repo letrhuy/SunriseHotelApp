@@ -51,43 +51,42 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Khi người dùng thay đổi lựa chọn Nhà cung cấp
+        
             $('#SupplierId').change(function () {
-                var supplierId = $(this).val(); // Lấy ID nhà cung cấp vừa chọn
+                var supplierId = $(this).val();
                 var productSelect = $('#ProductId');
 
-                // Xóa danh sách sản phẩm cũ
+           
                 productSelect.empty();
                 productSelect.append('<option value="">-- Đang tải dữ liệu... --</option>');
 
                 if (supplierId) {
-                    // Gọi API lấy sản phẩm của Nhà cung cấp này
+                  
                     $.get('/Imports/GetProductsBySupplier?supplierId=' + supplierId, function (data) {
                         productSelect.empty();
                         productSelect.append('<option value="">-- Chọn sản phẩm --</option>');
 
-                        // Lặp qua dữ liệu trả về và thêm vào thẻ select
+                       
                         $.each(data, function (index, item) {
                             productSelect.append('<option value="' + item.productId + '">' + item.productName + '</option>');
                         });
                     }).fail(function() {
-                        // Xử lý nếu bị lỗi
+             
                         productSelect.empty();
                         productSelect.append('<option value="">-- Lỗi tải dữ liệu --</option>');
                         alert("Có lỗi xảy ra khi tải danh sách sản phẩm. Vui lòng kiểm tra lại hàm GetProductsBySupplier trong ImportsController.");
                     });
                 } else {
-                    // Nếu không chọn nhà cung cấp nào, làm trống ô sản phẩm
+                  
                     productSelect.empty();
                     productSelect.append('<option value="">-- Chọn sản phẩm --</option>');
                 }
             });
 
-            // Nếu load trang mà có sẵn SupplierId, tự động kích hoạt lọc (hữu ích nếu load lại form bị lỗi)
+          
             if ($('#SupplierId').val()) {
                 $('#SupplierId').trigger('change');
             } else {
-                // Mặc định lúc mới vào làm trống ô Sản phẩm
                 $('#ProductId').empty();
                 $('#ProductId').append('<option value="">-- Vui lòng chọn nhà cung cấp trước --</option>');
             }

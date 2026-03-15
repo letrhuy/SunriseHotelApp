@@ -37,7 +37,6 @@ namespace SunriseHotelApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(int supplierId, int productId, int quantity, decimal importPrice)
         {
-            // Lấy ID người dùng từ Session (Giả sử admin đang đăng nhập)
             int userId = HttpContext.Session.GetInt32("UserId") ?? 1;
 
             // A. Tạo phiếu nhập tổng (Receipt)
@@ -72,13 +71,14 @@ namespace SunriseHotelApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        // Hàm này trả về danh sách sản phẩm dưới dạng JSON khi chọn Nhà cung cấp
+
         [HttpGet]
         public async Task<IActionResult> GetProductsBySupplier(int supplierId)
         {
             var products = await _context.Products
                 .Where(p => p.SupplierID == supplierId)
-                .Select(p => new {
+                .Select(p => new
+                {
                     productId = p.ProductId,
                     productName = p.ProductName + " (Tồn: " + p.CurrentStock + ")"
                 })
@@ -86,25 +86,23 @@ namespace SunriseHotelApp.Controllers
 
             return Json(products);
         }
-        // GET: Imports/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound(); // Báo lỗi nếu không truyền ID
+                return NotFound();
             }
-
-            // Lấy thông tin phiếu nhập, BAO GỒM cả Nhà cung cấp, Người tạo, và Danh sách hàng hóa
             var importReceipt = await _context.ImportReceipts
                 .Include(i => i.Supplier)
                 .Include(i => i.CreatedByUser)
                 .Include(i => i.ImportReceiptDetails)
-                    .ThenInclude(d => d.Product) // Lấy thêm thông tin Tên sản phẩm từ bảng Products
+                    .ThenInclude(d => d.Product) 
                 .FirstOrDefaultAsync(m => m.ReceiptId == id);
 
             if (importReceipt == null)
             {
-                return NotFound(); // Không tìm thấy phiếu
+                return NotFound(); 
             }
 
             return View(importReceipt);

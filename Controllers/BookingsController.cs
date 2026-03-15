@@ -99,7 +99,6 @@ namespace SunriseHotelApp.Controllers
         // 1. DASHBOARD (SƠ ĐỒ PHÒNG)
         public async Task<IActionResult> Dashboard()
         {
-            // Sửa key thành "UserName" (N hoa) để khớp với AccountController
             if (HttpContext.Session.GetString("UserName") == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -190,8 +189,7 @@ namespace SunriseHotelApp.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // 6. DỌN PHÒNG XONG (MỚI THÊM)
-        // Chuyển trạng thái từ Cleaning (Vàng) -> Available (Xanh)
+        // 6. DỌN PHÒNG XONG
         public async Task<IActionResult> CleanRoom(int roomId)
         {
             if (HttpContext.Session.GetString("UserName") == null) return RedirectToAction("Login", "Account");
@@ -199,19 +197,18 @@ namespace SunriseHotelApp.Controllers
             var room = await _context.Rooms.FindAsync(roomId);
             if (room != null && room.RoomStatus == "Cleaning")
             {
-                room.RoomStatus = "Available"; // Phòng đã sẵn sàng đón khách mới
+                room.RoomStatus = "Available"; 
                 await _context.SaveChangesAsync();
             }
 
             return RedirectToAction("Dashboard");
         }
+
         // 7. DANH SÁCH ĐƠN ĐẶT PHÒNG (Để xem lịch sử)
         public async Task<IActionResult> Index()
         {
-            // Kiểm tra đăng nhập
             if (HttpContext.Session.GetString("UserName") == null) return RedirectToAction("Login", "Account");
 
-            // Lấy danh sách booking, sắp xếp đơn mới nhất lên đầu
             var bookings = await _context.Bookings
                 .Include(b => b.Customer)
                 .Include(b => b.Room)

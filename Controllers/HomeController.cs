@@ -14,11 +14,8 @@ namespace SunriseHotelApp.Controllers
             _context = context;
         }
 
-        // GET: /
-        // Trang chủ chỉ hiển thị danh sách các Hạng phòng để giới thiệu (Showcase)
         public async Task<IActionResult> Index()
         {
-            // Lấy tất cả loại phòng để hiển thị phần "Hạng Phòng Nổi Bật"
             var roomTypes = await _context.RoomTypes.ToListAsync();
             return View(roomTypes);
         }

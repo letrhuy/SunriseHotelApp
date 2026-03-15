@@ -6,17 +6,15 @@
 }
 
 <style>
-    /* Chú ý: Phải dùng 2 dấu @@ ở đây để Razor không báo lỗi */
     @@media print {
-        /* 1. Ẩn toàn bộ giao diện web (Sidebar, Menu, Topbar...) */
         body * {
             visibility: hidden;
         }
-        /* 2. Chỉ hiển thị vùng hóa đơn cần in */
+
         #printable-receipt, #printable-receipt * {
             visibility: visible;
         }
-        /* 3. Đưa vùng in lên sát lề giấy A4 */
+
         #printable-receipt {
             position: absolute;
             left: 0;
@@ -25,11 +23,11 @@
             padding: 0;
             margin: 0;
         }
-        /* 4. Ẩn các nút bấm điều hướng khi in ra giấy */
+
         .print-hidden {
             display: none !important;
         }
-        /* 5. Chỉnh lại màu sắc bảng cho chuẩn giấy in (Viền đen, bỏ nền xám/đen) */
+      
         .card {
             border: none !important;
             box-shadow: none !important;

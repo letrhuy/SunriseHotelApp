@@ -16,7 +16,6 @@ namespace SunriseHotelApp.Controllers
         // 1. DANH SÁCH NHÂN SỰ
         public async Task<IActionResult> Index()
         {
-            // [Bảo mật] Chỉ Admin mới được vào trang này
             if (HttpContext.Session.GetString("Role") != "Admin")
             {
                 return RedirectToAction("Dashboard", "Bookings");
@@ -40,10 +39,8 @@ namespace SunriseHotelApp.Controllers
         {
             if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Dashboard", "Bookings");
 
-            // Kiểm tra xem user nhập đủ thông tin chưa
             if (ModelState.IsValid)
             {
-                // Kiểm tra trùng tên tài khoản
                 var exists = await _context.SystemUsers.AnyAsync(u => u.Username == user.Username);
                 if (exists)
                 {
@@ -51,7 +48,7 @@ namespace SunriseHotelApp.Controllers
                     return View(user);
                 }
 
-                user.IsActive = true; // Mặc định kích hoạt
+                user.IsActive = true; 
                 _context.SystemUsers.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -59,7 +56,7 @@ namespace SunriseHotelApp.Controllers
             return View(user);
         }
 
-        // 4. CHỈNH SỬA NHÂN VIÊN (GET) - [MỚI THÊM]
+        // 4. CHỈNH SỬA NHÂN VIÊN (GET) 
         public async Task<IActionResult> Edit(int? id)
         {
             if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Dashboard", "Bookings");
@@ -72,7 +69,7 @@ namespace SunriseHotelApp.Controllers
             return View(user);
         }
 
-        // 5. XỬ LÝ CẬP NHẬT (POST) - [MỚI THÊM]
+        // 5. XỬ LÝ CẬP NHẬT (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, SystemUser user)
@@ -81,16 +78,13 @@ namespace SunriseHotelApp.Controllers
 
             if (id != user.UserId) return NotFound();
 
-            // Lấy thông tin cũ từ database ra để cập nhật
             var existingUser = await _context.SystemUsers.FindAsync(id);
             if (existingUser == null) return NotFound();
 
-            // Chỉ cập nhật các thông tin cho phép
             existingUser.FullName = user.FullName;
             existingUser.UserRole = user.UserRole;
             existingUser.IsActive = user.IsActive;
 
-            // Logic đặt lại mật khẩu: Chỉ đổi nếu admin nhập mật khẩu mới
             if (!string.IsNullOrEmpty(user.PasswordHash))
             {
                 existingUser.PasswordHash = user.PasswordHash;
@@ -116,7 +110,6 @@ namespace SunriseHotelApp.Controllers
             var user = await _context.SystemUsers.FindAsync(id);
             if (user != null)
             {
-                // Không cho phép tự khóa chính mình (tránh Admin tự nhốt mình ở ngoài)
                 var currentUser = HttpContext.Session.GetString("Username");
                 if (user.Username == currentUser)
                 {

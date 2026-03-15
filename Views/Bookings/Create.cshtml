@@ -1,9 +1,8 @@
 ﻿@model SunriseHotelApp.Models.Booking
 @{
     ViewData["Title"] = "Xác nhận đặt phòng";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Dùng layout khách hàng
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
-    // LẤY DỮ LIỆU TỪ CONTROLLER
     var roomType = ViewBag.RoomType as SunriseHotelApp.Models.RoomType;
     var checkIn = ViewBag.CheckIn != null ? (DateTime)ViewBag.CheckIn : DateTime.Now;
     var checkOut = ViewBag.CheckOut != null ? (DateTime)ViewBag.CheckOut : DateTime.Now.AddDays(1);
@@ -167,7 +166,6 @@ else
                     // Cộng thêm tiền
                     finalPrice += shuttlePrice;
                 } else {
-                    // Ẩn dòng phí xe
                     feeRow.style.display = 'none';
                 }
 

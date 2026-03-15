@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SunriseHotelApp.Models;
 using Microsoft.EntityFrameworkCore;
+using SunriseHotelApp.Models;
 
 public class ProductsController : Controller
 {
     private readonly HotelManagementDbContext _context;
-    public ProductsController(HotelManagementDbContext context) { _context = context; }
+
+    public ProductsController(HotelManagementDbContext context)
+    { _context = context; }
 
     public async Task<IActionResult> Index()
     {

@@ -276,3 +276,4 @@ D:\Lập trình _net\DoAn_1\Đồ_án_cơ_sở_1\SunriseHotelApp\SunriseHotelApp
 D:\Lập trình _net\DoAn_1\Đồ_án_cơ_sở_1\SunriseHotelApp\SunriseHotelApp\obj\Debug\net8.0\SunriseHotelApp.pdb
 D:\Lập trình _net\DoAn_1\Đồ_án_cơ_sở_1\SunriseHotelApp\SunriseHotelApp\obj\Debug\net8.0\SunriseHotelApp.genruntimeconfig.cache
 D:\Lập trình _net\DoAn_1\Đồ_án_cơ_sở_1\SunriseHotelApp\SunriseHotelApp\obj\Debug\net8.0\ref\SunriseHotelApp.dll
+D:\Lập trình _net\DoAn_1\Đồ_án_cơ_sở_1\SunriseHotelApp\SunriseHotelApp\obj\Debug\net8.0\SunriseHotelApp.sourcelink.json

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SunriseHotelApp.Models;
+﻿namespace SunriseHotelApp.Models;
 
 public partial class Room
 {
