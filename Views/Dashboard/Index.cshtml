@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Tổng quan hệ thống";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid pt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold text-uppercase text-secondary mb-1"><i class="fas fa-chart-line me-2"></i>Báo cáo hoạt động</h4>
+            <p class="text-muted mb-0">Chào mừng <strong>@ViewBag.UserName</strong> quay trở lại làm việc!</p>
+        </div>
+        <span class="badge bg-primary fs-6 p-2 shadow-sm">Ngày: @DateTime.Now.ToString("dd/MM/yyyy")</span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100 border-start border-primary border-4 rounded-3">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted fw-bold text-uppercase mb-2" style="font-size: 0.85rem;">Doanh thu hôm nay</p>
+                            <h3 class="fw-bold text-primary mb-0">
+                                @string.Format("{0:N0}", ViewBag.DailyRevenue) đ
+                            </h3>
+                        </div>
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow" style="width: 60px; height: 60px;">
+                            <i class="fas fa-money-bill-wave fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100 border-start border-success border-4 rounded-3">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted fw-bold text-uppercase mb-2" style="font-size: 0.85rem;">Phòng có khách</p>
+                            <h3 class="fw-bold mb-0">
+                                <span class="text-danger">@ViewBag.OccupiedCount</span> <span class="text-muted fs-5">/ @ViewBag.TotalRooms</span>
+                            </h3>
+                        </div>
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center shadow" style="width: 60px; height: 60px;">
+                            <i class="fas fa-door-open fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 h-100 border-start border-danger border-4 rounded-3">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted fw-bold text-uppercase mb-2" style="font-size: 0.85rem;">Cảnh báo kho hàng</p>
+                            <h3 class="fw-bold text-danger mb-0">
+                                @ViewBag.LowStockCount <span class="fs-6 text-muted">Mặt hàng sắp hết</span>
+                            </h3>
+                        </div>
+                        <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center shadow" style="width: 60px; height: 60px;">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

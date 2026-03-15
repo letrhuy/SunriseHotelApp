@@ -1,0 +1,56 @@
+﻿@model SunriseHotelApp.Models.SystemUser
+@{
+    ViewData["Title"] = "Thêm nhân viên mới";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h5 class="fw-bold text-uppercase m-0"><i class="fas fa-user-plus me-2"></i> Thông tin nhân viên mới</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2 small mb-3"></div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small">HỌ VÀ TÊN</label>
+                            <input asp-for="FullName" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small">TÊN ĐĂNG NHẬP</label>
+                            <input asp-for="Username" class="form-control" placeholder="Viết liền không dấu (vd: letan01)" required />
+                            <span asp-validation-for="Username" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small">MẬT KHẨU</label>
+                            <input asp-for="PasswordHash" type="password" class="form-control" placeholder="Nhập mật khẩu..." required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted small">CHỨC VỤ</label>
+                            <select asp-for="UserRole" class="form-select">
+                                <option value="Staff">Nhân viên Lễ tân (Staff)</option>
+                                <option value="Admin">Quản lý (Manager/Admin)</option>
+                            </select>
+                        </div>
+
+                        <input type="hidden" asp-for="IsActive" value="true" />
+
+                        <div class="d-flex justify-content-between pt-2 border-top">
+                            <a href="/Users" class="btn btn-light text-muted">Quay lại</a>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                <i class="fas fa-save me-1"></i> Lưu nhân viên
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

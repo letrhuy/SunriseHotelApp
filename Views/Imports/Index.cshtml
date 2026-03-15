@@ -1,0 +1,58 @@
+﻿@model IEnumerable<SunriseHotelApp.Models.ImportReceipt>
+@{
+    ViewData["Title"] = "Lịch sử nhập hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-uppercase"><i class="fas fa-history me-2"></i> Lịch sử nhập kho</h4>
+        <a href="/Imports/Create" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus me-1"></i> Nhập hàng mới
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="bg-light text-secondary">
+                    <tr>
+                        <th>Ngày nhập</th>
+                        <th>Nhà cung cấp</th>
+                        <th>Người tạo</th>
+                        <th class="text-end">Tổng tiền</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            @* SỬA LỖI TẠI ĐÂY: Ép kiểu về DateTime để dùng định dạng ngày tháng *@
+                            <td>@(((DateTime)item.ImportDate).ToString("dd/MM/yyyy HH:mm"))</td>
+
+                            <td class="fw-bold text-dark">@(item.Supplier?.SupplierName ?? "N/A")</td>
+
+                            <td>
+                                <span class="badge bg-info-subtle text-info px-3">
+                                    <i class="fas fa-user-edit me-1"></i> @(item.CreatedByUser?.FullName ?? "Admin")
+                                </span>
+                            </td>
+
+                            @* SỬA LỖI TẠI ĐÂY: Ép kiểu về decimal để dùng định dạng số N0 *@
+                            <td class="text-end fw-bold text-danger">
+                                @(((decimal)item.TotalAmount).ToString("N0")) ₫
+                            </td>
+
+                            <td class="text-center">
+                                <a href="/Imports/Details/@item.ReceiptId" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                                    <i class="fas fa-eye me-1"></i> Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

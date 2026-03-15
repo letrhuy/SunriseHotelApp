@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sunrise Central Hotel - Cần Thơ (5 Sao)</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* NAVBAR */
+        .navbar-custom {
+            background-color: rgba(0, 0, 0, 0.9); /* Đen đậm hơn chút cho sang */
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3); /* Viền vàng mờ */
+        }
+
+        .navbar-brand {
+            color: #d4af37 !important;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        /* CSS cho 5 ngôi sao ở logo */
+        .brand-stars i {
+            font-size: 0.7rem;
+            margin-right: 2px;
+            color: #d4af37;
+        }
+
+        .nav-link {
+            color: #e0e0e0 !important;
+            font-size: 0.9rem;
+            margin-left: 25px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+            .nav-link:hover {
+                color: #d4af37 !important;
+            }
+
+        .btn-book-now {
+            background: linear-gradient(45deg, #d4af37, #f9d976); /* Nút vàng gradient sang trọng */
+            color: #000;
+            font-weight: bold;
+            border-radius: 0;
+            padding: 10px 25px;
+            font-size: 0.85rem;
+            border: none;
+            box-shadow: 0 4px 6px rgba(212, 175, 55, 0.2);
+            transition: transform 0.2s;
+        }
+
+            .btn-book-now:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 8px rgba(212, 175, 55, 0.3);
+                color: #000; /* Giữ màu chữ đen khi hover */
+            }
+
+        /* FOOTER */
+        footer {
+            background-color: #111; /* Đen gần như tuyệt đối */
+            color: #aaa;
+            padding: 70px 0 30px;
+            font-size: 0.9rem;
+        }
+
+            footer h5 {
+                color: #d4af37;
+                margin-bottom: 25px;
+                font-size: 1.1rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            footer ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            footer li {
+                margin-bottom: 12px;
+                display: flex;
+                align-items: flex-start;
+            }
+
+                footer li i {
+                    margin-right: 10px;
+                    color: #d4af37;
+                    margin-top: 4px;
+                }
+
+            footer a {
+                color: #aaa;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                footer a:hover {
+                    color: #d4af37;
+                }
+
+        .payment-icons i {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            color: #ccc;
+            transition: color 0.3s;
+        }
+
+            .payment-icons i:hover {
+                color: #d4af37;
+            }
+
+        /* CSS cho nút Staff Login ở footer */
+        .staff-login-link {
+            opacity: 0.5;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+            .staff-login-link:hover {
+                opacity: 1;
+                color: #fff !important;
+                text-decoration: underline !important;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <div class="d-flex flex-column align-items-start">
+                        <span><i class="fas fa-hotel me-2"></i> SUNRISE CENTRAL</span>
+                        <div class="brand-stars mt-1">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                    <ul class="navbar-nav align-items-center">
+                        <li class="nav-item"><a class="nav-link" href="/">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#room-list">Phòng nghỉ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#services">Dịch vụ</a></li>
+                        <li class="nav-item ms-3">
+                            <a class="btn btn-book-now" href="/#booking-area">ĐẶT PHÒNG NGAY</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div style="padding-top: 0;">
+        @RenderBody()
+    </div>
+
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>SUNRISE CENTRAL HOTEL</h5>
+                    <p>Biểu tượng nghỉ dưỡng đẳng cấp <strong>5 sao</strong> tại trung tâm Cần Thơ. Nơi trải nghiệm dịch vụ hoàn hảo và không gian sang trọng bậc nhất.</p>
+                    <div class="mt-3 text-warning">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>LIÊN HỆ</h5>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Số 01 Đại Lộ Hòa Bình, Q. Ninh Kiều, TP. Cần Thơ</li>
+                        <li><i class="fas fa-phone-alt"></i> (+84) 292 3838 999</li>
+                        <li><i class="fas fa-envelope"></i> info@sunrisecentral.vn</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>CHẤP NHẬN THANH TOÁN</h5>
+                    <div class="payment-icons mt-3">
+                        <i class="fab fa-cc-visa" title="Visa"></i>
+                        <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                        <i class="fab fa-cc-amex" title="American Express"></i>
+                        <i class="fab fa-cc-jcb" title="JCB"></i>
+                    </div>
+                    <h5 class="mt-4">KẾT NỐI</h5>
+                    <div class="payment-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4" />
+            <div class="d-flex justify-content-between align-items-center small text-muted">
+                <div>
+                    &copy; @DateTime.Now.Year Sunrise Central Hotel. All rights reserved.
+                </div>
+
+                <div>
+                    <a href="/Dashboard" class="staff-login-link">
+                        <i class="fas fa-user-lock me-1"></i> Staff Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

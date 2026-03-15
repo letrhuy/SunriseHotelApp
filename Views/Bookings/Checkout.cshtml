@@ -1,0 +1,134 @@
+﻿@model SunriseHotelApp.Models.Booking
+@{
+    ViewData["Title"] = "Thanh toán";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    // Lấy dữ liệu đã tính toán sẵn từ Controller gửi sang (ViewBag)
+    // Để đảm bảo số liệu chính xác tuyệt đối
+    int days = ViewBag.Days ?? 1;
+    decimal roomTotal = ViewBag.RoomTotal ?? 0;
+    decimal serviceTotal = ViewBag.ServiceTotal ?? 0;
+    decimal grandTotal = ViewBag.GrandTotal ?? 0;
+}
+
+<div class="container mt-4">
+    <div class="card border-0 shadow-lg">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">HÓA ĐƠN THANH TOÁN</h4>
+            <button onclick="window.print()" class="btn btn-light btn-sm fw-bold"><i class="fas fa-print"></i> IN HÓA ĐƠN</button>
+        </div>
+
+        <div class="card-body p-5" id="invoice-area">
+            <div class="row mb-4 border-bottom pb-3">
+                <div class="col-6">
+                    <h5 class="text-muted small text-uppercase">Khách hàng</h5>
+                    <h3 class="fw-bold text-dark">@Model.Customer?.FullName</h3>
+                    <p class="mb-1"><i class="fas fa-phone-alt me-1"></i> @Model.Customer?.PhoneNumber</p>
+                    <p class="mb-0"><i class="fas fa-calendar-alt me-1"></i> Check-in: @Model.CheckInDate.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="col-6 text-end">
+                    <h5 class="text-muted small text-uppercase">Phòng</h5>
+                    <h1 class="display-4 fw-bold text-success">@Model.Room?.RoomNumber</h1>
+                    <span class="badge bg-dark p-2">@Model.Room?.RoomType?.RoomTypeName</span>
+                </div>
+            </div>
+
+            <table class="table table-striped table-hover mt-3">
+                <thead class="bg-light text-uppercase small fw-bold">
+                    <tr>
+                        <th>Nội dung</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong><i class="fas fa-bed me-1"></i> Tiền phòng</strong><br />
+                            <small class="text-muted">(@Model.CheckInDate.ToString("dd/MM") - @DateTime.Now.ToString("dd/MM"))</small>
+                        </td>
+                        <td class="text-center">@days đêm</td>
+                        <td class="text-end">@Model.Room?.RoomType?.PricePerNight.ToString("N0")</td>
+                        <td class="text-end fw-bold">@roomTotal.ToString("N0")</td>
+                    </tr>
+
+                    @if (Model.BookingServices != null && Model.BookingServices.Any())
+                    {
+                        foreach (var item in Model.BookingServices)
+                        {
+                            <tr>
+                                <td>
+                                    <span><i class="fas fa-utensils me-1"></i> @item.Product?.ProductName</span>
+                                </td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end">@item.PriceAtOrder.ToString("N0")</td>
+                                <td class="text-end">@((item.PriceAtOrder * item.Quantity).ToString("N0"))</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot class="border-top border-2">
+                    <tr>
+                        <td colspan="3" class="text-end pt-3">Tổng tiền dịch vụ:</td>
+                        <td class="text-end pt-3 text-muted">@serviceTotal.ToString("N0")</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end pb-3 align-middle"><strong class="fs-4">TỔNG CỘNG:</strong></td>
+                        <td class="text-end pb-3">
+                            <h2 class="text-danger fw-bold m-0">@grandTotal.ToString("N0") ₫</h2>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="mt-5 text-end d-print-none">
+                <form asp-action="ConfirmCheckout" method="post">
+                    <input type="hidden" name="bookingId" value="@Model.BookingId" />
+
+                    <a href="/Rooms" class="btn btn-secondary me-2">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+
+                    <button type="submit" class="btn btn-success px-4 py-2 fw-bold shadow" onclick="return confirm('Xác nhận khách đã thanh toán đủ số tiền trên?');">
+                        <i class="fas fa-check-circle me-1"></i> XÁC NHẬN THANH TOÁN
+                    </button>
+                </form>
+            </div>
+
+            <div class="text-center mt-5 text-muted small d-none d-print-block">
+                <p>Cảm ơn quý khách đã sử dụng dịch vụ tại The Sunrise Grand Palace!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* CSS dành riêng cho máy in */
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        #invoice-area, #invoice-area * {
+            visibility: visible;
+        }
+
+        #invoice-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0 !important;
+        }
+
+        .btn, .card-header, footer, header {
+            display: none !important;
+        }
+
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+    }
+</style>

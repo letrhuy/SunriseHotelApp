@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SunriseHotelApp.Models.Room>
+@{
+    ViewData["Title"] = "Sơ đồ phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid pt-4">
+    <h3 class="fw-bold mb-4 text-dark"><i class="fas fa-th-large me-2"></i>Sơ Đồ Trạng Thái Phòng</h3>
+
+    <div class="row g-3">
+        @foreach (var room in Model)
+        {
+            // Xác định màu sắc
+            string cardClass = "bg-success";
+            string statusText = "Còn trống";
+            string icon = "fa-door-open";
+
+            if (room.RoomStatus == "Occupied")
+            {
+                cardClass = "bg-danger";
+                statusText = "Có khách";
+                icon = "fa-user";
+            }
+            else if (room.RoomStatus == "Cleaning")
+            {
+                cardClass = "bg-warning";
+                statusText = "Đang dọn";
+                icon = "fa-broom";
+            }
+
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-white @cardClass shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <h2 class="fw-bold display-4">@room.RoomNumber</h2>
+                        <p class="mb-2"><i class="fas @icon me-1"></i> @statusText</p>
+                        <small>@room.RoomType?.RoomTypeName</small>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between">
+                        @if (room.RoomStatus == "Occupied")
+                        {
+                            <a href="/Bookings/AddService?roomId=@room.RoomId" class="btn btn-sm btn-outline-primary fw-bold" title="Gọi món"><i class="fas fa-utensils"></i></a>
+                            <a href="/Bookings/Checkout?roomId=@room.RoomId" class="btn btn-sm btn-outline-danger fw-bold" title="Trả"><i class="fas fa-money-bill-wave"></i></a>
+                        }
+                        else if (room.RoomStatus == "Cleaning")
+                        {
+                            <a href="/Bookings/CleanRoom?roomId=@room.RoomId" class="btn btn-sm btn-outline-warning fw-bold w-100 text-dark"><i class="fas fa-check"></i> Xong</a>
+                        }
+                        else
+                        {
+                            <a href="/Bookings/Search" class="btn btn-sm btn-outline-success fw-bold w-100"><i class="fas fa-plus"></i> Nhận khách</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

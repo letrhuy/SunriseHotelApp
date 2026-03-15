@@ -1,0 +1,123 @@
+﻿@model SunriseHotelApp.Models.ImportReceipt
+
+@{
+    ViewData["Title"] = "Chi tiết phiếu nhập";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    /* Chú ý: Phải dùng 2 dấu @@ ở đây để Razor không báo lỗi */
+    @@media print {
+        /* 1. Ẩn toàn bộ giao diện web (Sidebar, Menu, Topbar...) */
+        body * {
+            visibility: hidden;
+        }
+        /* 2. Chỉ hiển thị vùng hóa đơn cần in */
+        #printable-receipt, #printable-receipt * {
+            visibility: visible;
+        }
+        /* 3. Đưa vùng in lên sát lề giấy A4 */
+        #printable-receipt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        /* 4. Ẩn các nút bấm điều hướng khi in ra giấy */
+        .print-hidden {
+            display: none !important;
+        }
+        /* 5. Chỉnh lại màu sắc bảng cho chuẩn giấy in (Viền đen, bỏ nền xám/đen) */
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .bg-light {
+            background-color: transparent !important;
+        }
+
+        .table-dark th {
+            background-color: transparent !important;
+            color: black !important;
+            border: 1px solid black !important;
+        }
+
+        .table-bordered td, .table-bordered th {
+            border: 1px solid black !important;
+        }
+    }
+</style>
+
+<div class="container-fluid pt-4" id="printable-receipt">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="m-0 fw-bold"><i class="fas fa-file-invoice me-2 print-hidden"></i>Chi Tiết Phiếu Nhập #@Model.ReceiptId</h5>
+            <span class="badge bg-light text-primary fs-6 fw-bold">@Model.ImportDate.ToString("dd/MM/yyyy HH:mm")</span>
+        </div>
+        <div class="card-body p-4">
+
+            <div class="row mb-4 bg-light p-3 rounded border">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">Thông tin Nhà cung cấp</h6>
+                    <p class="mb-1"><strong>Tên đơn vị:</strong> @Model.Supplier?.SupplierName</p>
+                    <p class="mb-1"><strong>Liên hệ:</strong> @Model.Supplier?.ContactPerson</p>
+                    <p class="mb-1"><strong>Điện thoại:</strong> @Model.Supplier?.PhoneNumber</p>
+                </div>
+                <div class="col-md-6 text-md-end border-start">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">Thông tin Chứng từ</h6>
+                    <p class="mb-1"><strong>Mã phiếu:</strong> PN-@Model.ReceiptId.ToString("D5")</p>
+                    <p class="mb-1"><strong>Người lập phiếu:</strong> @Model.CreatedByUser?.FullName</p>
+                    <p class="mb-1 text-danger fw-bold fs-5 mt-2">Tổng tiền: @string.Format("{0:N0}", Model.TotalAmount) đ</p>
+                </div>
+            </div>
+
+            <h6 class="fw-bold border-bottom pb-2 mb-3 text-uppercase text-primary">Danh sách hàng hóa nhập kho</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th width="5%" class="text-center">STT</th>
+                            <th>Tên sản phẩm</th>
+                            <th width="10%" class="text-center">Đơn vị</th>
+                            <th width="15%" class="text-center">Số lượng</th>
+                            <th width="20%" class="text-end">Đơn giá nhập</th>
+                            <th width="20%" class="text-end">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ImportReceiptDetails != null && Model.ImportReceiptDetails.Any())
+                        {
+                            int stt = 1;
+                            foreach (var detail in Model.ImportReceiptDetails)
+                            {
+                                <tr>
+                                    <td class="text-center">@stt</td>
+                                    <td class="fw-bold">@detail.Product?.ProductName</td>
+                                    <td class="text-center">@detail.Product?.Unit</td>
+                                    <td class="text-center">@detail.Quantity</td>
+                                    <td class="text-end">@string.Format("{0:N0}", detail.ImportPrice) đ</td>
+                                    <td class="text-end fw-bold text-success">@string.Format("{0:N0}", detail.SubTotal) đ</td>
+                                </tr>
+                                stt++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-3">Không có dữ liệu chi tiết hàng hóa.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between print-hidden">
+                <a href="/Imports" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i> Quay lại danh sách</a>
+                <button class="btn btn-success" onclick="window.print()"><i class="fas fa-print me-1"></i> In phiếu này</button>
+            </div>
+        </div>
+    </div>
+</div>

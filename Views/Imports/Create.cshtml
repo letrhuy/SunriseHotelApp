@@ -1,0 +1,96 @@
+﻿@{
+    ViewData["Title"] = "Nhập kho hàng hóa";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white fw-bold text-uppercase">
+            <i class="fas fa-truck-loading me-2"></i> Tạo phiếu nhập kho mới
+        </div>
+        <div class="card-body bg-light">
+            <form asp-action="Create" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Nhà cung cấp:</label>
+                        <select name="supplierId" id="SupplierId" class="form-select" asp-items="ViewBag.Suppliers" required>
+                            <option value="">-- Chọn nhà cung cấp --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Sản phẩm nhập:</label>
+                        <select name="productId" id="ProductId" class="form-select" asp-items="ViewBag.Products" required>
+                            <option value="">-- Chọn sản phẩm --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Số lượng nhập:</label>
+                        <input type="number" name="quantity" class="form-control" min="1" value="10" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Giá nhập (VNĐ):</label>
+                        <input type="number" name="importPrice" class="form-control" placeholder="VD: 2000000" required />
+                    </div>
+                </div>
+
+                <div class="text-end mt-3">
+                    <a href="/Imports" class="btn btn-secondary me-2">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold">
+                        <i class="fas fa-save me-1"></i> XÁC NHẬN NHẬP KHO
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Khi người dùng thay đổi lựa chọn Nhà cung cấp
+            $('#SupplierId').change(function () {
+                var supplierId = $(this).val(); // Lấy ID nhà cung cấp vừa chọn
+                var productSelect = $('#ProductId');
+
+                // Xóa danh sách sản phẩm cũ
+                productSelect.empty();
+                productSelect.append('<option value="">-- Đang tải dữ liệu... --</option>');
+
+                if (supplierId) {
+                    // Gọi API lấy sản phẩm của Nhà cung cấp này
+                    $.get('/Imports/GetProductsBySupplier?supplierId=' + supplierId, function (data) {
+                        productSelect.empty();
+                        productSelect.append('<option value="">-- Chọn sản phẩm --</option>');
+
+                        // Lặp qua dữ liệu trả về và thêm vào thẻ select
+                        $.each(data, function (index, item) {
+                            productSelect.append('<option value="' + item.productId + '">' + item.productName + '</option>');
+                        });
+                    }).fail(function() {
+                        // Xử lý nếu bị lỗi
+                        productSelect.empty();
+                        productSelect.append('<option value="">-- Lỗi tải dữ liệu --</option>');
+                        alert("Có lỗi xảy ra khi tải danh sách sản phẩm. Vui lòng kiểm tra lại hàm GetProductsBySupplier trong ImportsController.");
+                    });
+                } else {
+                    // Nếu không chọn nhà cung cấp nào, làm trống ô sản phẩm
+                    productSelect.empty();
+                    productSelect.append('<option value="">-- Chọn sản phẩm --</option>');
+                }
+            });
+
+            // Nếu load trang mà có sẵn SupplierId, tự động kích hoạt lọc (hữu ích nếu load lại form bị lỗi)
+            if ($('#SupplierId').val()) {
+                $('#SupplierId').trigger('change');
+            } else {
+                // Mặc định lúc mới vào làm trống ô Sản phẩm
+                $('#ProductId').empty();
+                $('#ProductId').append('<option value="">-- Vui lòng chọn nhà cung cấp trước --</option>');
+            }
+        });
+    </script>
+}

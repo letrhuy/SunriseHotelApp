@@ -1,0 +1,117 @@
+﻿@model SunriseHotelApp.Models.Booking
+@{
+    ViewData["Title"] = "Chi tiết đơn đặt phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // Hoặc Layout bạn đang dùng cho Admin
+}
+
+<div class="container-fluid pt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-dark"><i class="fas fa-file-invoice me-2"></i>Chi tiết đơn #@Model.BookingId</h4>
+        <a href="/Bookings/Index" class="btn btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white fw-bold py-3 text-primary">
+                    THÔNG TIN KHÁCH HÀNG
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-muted w-25">Họ và tên:</td>
+                            <td class="fw-bold fs-5">@Model.Customer?.FullName</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Số điện thoại:</td>
+                            <td>@Model.Customer?.PhoneNumber</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Email:</td>
+                            <td>@(Model.Customer?.Email ?? "Không có")</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">CCCD/CMND:</td>
+                            <td class="text-danger fw-bold">@(Model.Customer?.IdentityCard ?? "Chưa cập nhật")</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white fw-bold py-3 text-warning">
+                    THÔNG TIN PHÒNG & THANH TOÁN
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-muted w-25">Phòng:</td>
+                            <td><span class="badge bg-info text-dark">@Model.Room?.RoomNumber</span> (@Model.Room?.RoomType?.RoomTypeName)</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Ngày ở:</td>
+                            <td>@Model.CheckInDate.ToString("dd/MM") <i class="fas fa-arrow-right mx-1 small"></i> @Model.CheckOutDate.ToString("dd/MM")</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Ghi chú:</td>
+                            <td class="bg-light p-2 rounded fst-italic border">
+                                @if (!string.IsNullOrEmpty(Model.Notes))
+                                {
+                                    <span class="text-primary fw-bold"><i class="fas fa-exclamation-circle me-1"></i> @Model.Notes</span>
+                                }
+                                else
+                                {
+                                    <span>Không có ghi chú</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class="text-muted pt-3">TỔNG TIỀN:</td>
+                            <td class="pt-3 text-success fw-bold fs-4">@Model.TotalAmount.ToString("N0") ₫</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4 border-0 shadow-sm bg-light">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                Trạng thái hiện tại:
+                @if (Model.BookingStatus == "Confirmed")
+                {
+                    <span class="badge bg-primary">Sắp đến</span>
+                }
+                else if (Model.BookingStatus == "Occupied")
+                {
+
+                    <span class="badge bg-warning text-dark">Đang ở</span>
+                }
+                else if (Model.BookingStatus == "Completed")
+                {
+
+                    <span class="badge bg-success">Hoàn tất</span>
+                }
+                else
+                {
+
+                    <span class="badge bg-secondary">@Model.BookingStatus</span>
+                }
+            </div>
+
+            @if (Model.BookingStatus == "Confirmed")
+            {
+                <form action="/Bookings/UpdateStatus" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@Model.BookingId" />
+                    <input type="hidden" name="newStatus" value="Occupied" />
+                    <button class="btn btn-warning fw-bold"><i class="fas fa-key me-2"></i> CHECK-IN NGAY</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>

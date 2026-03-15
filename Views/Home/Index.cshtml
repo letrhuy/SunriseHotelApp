@@ -1,0 +1,276 @@
+﻿@model IEnumerable<SunriseHotelApp.Models.RoomType>
+@{
+    ViewData["Title"] = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --gold-color: #c5a880;
+        --dark-blue: #0f172b;
+    }
+
+    body {
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, .font-serif {
+        font-family: 'Playfair Display', serif;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        height: 85vh;
+        background-attachment: fixed;
+        position: relative;
+    }
+
+    .hero-overlay {
+        background: linear-gradient(rgba(15, 23, 43, 0.6), rgba(15, 23, 43, 0.5));
+    }
+
+    /* Booking Bar */
+    .booking-bar {
+        background: white;
+        margin-top: -60px;
+        border-radius: 8px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        position: relative;
+        z-index: 100;
+        padding: 30px;
+    }
+
+    /* Room Cards */
+    .room-card {
+        transition: all 0.4s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+        .room-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+            border-color: var(--gold-color);
+        }
+
+    .room-img-wrapper {
+        overflow: hidden;
+        height: 260px;
+        position: relative;
+    }
+
+    .room-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .room-card:hover .room-img {
+        transform: scale(1.15);
+    }
+
+    .price-tag {
+        color: var(--gold-color);
+        font-weight: 700;
+        font-size: 1.3rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    /* Buttons */
+    .btn-gold {
+        background-color: var(--gold-color);
+        color: white;
+        border: none;
+        transition: all 0.3s;
+        text-transform: uppercase;
+    }
+
+        .btn-gold:hover {
+            background-color: #b09268;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(197, 168, 128, 0.4);
+        }
+
+    .btn-outline-gold {
+        border: 1px solid var(--gold-color);
+        color: var(--gold-color);
+        background: transparent;
+    }
+
+        .btn-outline-gold:hover {
+            background-color: var(--gold-color);
+            color: white;
+        }
+
+    .section-title::after {
+        content: "";
+        width: 80px;
+        height: 3px;
+        background-color: var(--gold-color);
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .ls-2 {
+        letter-spacing: 2px;
+    }
+
+    /* Service Box Static */
+    .service-box {
+        transition: 0.3s;
+        border: 1px solid transparent;
+        height: 100%;
+    }
+
+        .service-box:hover {
+            background: white;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            border-color: #f0f0f0;
+            transform: translateY(-5px);
+        }
+</style>
+
+<div class="hero-section w-100 d-flex align-items-center justify-content-center"
+     style="background-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1920&auto=format&fit=crop'); background-size: cover; background-position: center;">
+    <div class="hero-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+    <div class="container position-relative text-center text-white" style="z-index: 2;">
+        <h6 class="text-uppercase ls-2 mb-3 fw-bold" style="color: var(--gold-color);">Welcome to Sunrise Central</h6>
+        <h1 class="display-2 fw-bold mb-4" style="text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">Trải Nghiệm Kỳ Nghỉ<br>Đẳng Cấp 5 Sao</h1>
+        <p class="lead mb-5 w-75 mx-auto d-none d-lg-block opacity-90">Tận hưởng không gian sang trọng, dịch vụ hoàn hảo và những khoảnh khắc đáng nhớ.</p>
+        <a href="#booking-area" class="btn btn-gold px-5 py-3 rounded-0 fw-bold">TÌM PHÒNG TRỐNG <i class="fas fa-arrow-down ms-2"></i></a>
+    </div>
+</div>
+
+<div class="container" id="booking-area">
+    <div class="booking-bar">
+        <form action="/Bookings/Search" method="get">
+            <div class="row align-items-end g-3">
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase ls-2">Ngày nhận phòng</label>
+                    <input type="date" name="checkIn" class="form-control rounded-0 p-3 bg-light border-0" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase ls-2">Ngày trả phòng</label>
+                    <input type="date" name="checkOut" class="form-control rounded-0 p-3 bg-light border-0" value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase ls-2">Người lớn</label>
+                    <select class="form-select rounded-0 p-3 bg-light border-0" name="adults">
+                        <option value="1">1 Người</option>
+                        <option value="2" selected>2 Người</option>
+                        <option value="3">3 Người</option>
+                        <option value="4">4+ Người</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-dark w-100 h-100 py-3 rounded-0 fw-bold text-uppercase" style="background-color: var(--dark-blue); min-height: 58px;">
+                        <i class="fas fa-search me-2"></i> Kiểm tra phòng
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container py-5" id="room-list" style="margin-top: 60px;">
+    <div class="text-center mb-5">
+        <h6 class="text-uppercase fw-bold text-muted ls-2 mb-2">Luxury Accommodation</h6>
+        <h2 class="fw-bold section-title display-5">Hạng Phòng Nổi Bật</h2>
+    </div>
+
+    <div class="row g-4">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                var imgSrc = string.IsNullOrEmpty(item.Image) ? "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=800&auto=format&fit=crop" : item.Image;
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm room-card bg-white rounded-3 overflow-hidden">
+                        <div class="room-img-wrapper">
+                            <img src="@imgSrc" class="room-img" alt="@item.RoomTypeName">
+                        </div>
+                        <div class="card-body p-4 text-center">
+                            <h4 class="card-title fw-bold mb-3">@item.RoomTypeName</h4>
+                            <div class="d-flex justify-content-center gap-3 text-muted small mb-3">
+                                <span><i class="fas fa-user-friends me-1"></i> @item.MaxGuests Khách</span>
+                                <span style="color: #ddd;">|</span>
+                                <span><i class="fas fa-ruler-combined me-1"></i> 30m²</span>
+                            </div>
+                            <hr class="opacity-10 my-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-start">
+                                    <span class="small text-muted d-block text-uppercase" style="font-size: 0.75rem;">Giá mỗi đêm</span>
+                                    <span class="price-tag">@(((decimal)item.PricePerNight).ToString("N0")) <small class="fw-normal fs-6">₫</small></span>
+                                </div>
+                                <a href="/Bookings/Create?roomTypeId=@item.RoomTypeID" class="btn btn-outline-gold rounded-pill px-4 py-2 fw-bold small">ĐẶT NGAY</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="bg-light py-5 mt-5" id="services">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h6 class="text-uppercase fw-bold text-muted ls-2 mb-2">Exclusive Services</h6>
+            <h2 class="fw-bold section-title display-5">Tiện Ích Đẳng Cấp</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="service-box p-4 text-center rounded-3 bg-white h-100">
+                    <div class="mb-4 d-inline-block p-3 rounded-circle" style="background-color: rgba(197, 168, 128, 0.1);">
+                        <i class="fas fa-utensils fa-2x" style="color: var(--gold-color);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Buffet Sáng</h5>
+                    <p class="text-muted small mb-0">Thực đơn Á - Âu đa dạng thay đổi mỗi ngày.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-box p-4 text-center rounded-3 bg-white h-100">
+                    <div class="mb-4 d-inline-block p-3 rounded-circle" style="background-color: rgba(197, 168, 128, 0.1);">
+                        <i class="fas fa-car fa-2x" style="color: var(--gold-color);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Đưa Đón Sân Bay</h5>
+                    <p class="text-muted small mb-0">Xe sang trọng, đúng giờ, tài xế chuyên nghiệp.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-box p-4 text-center rounded-3 bg-white h-100">
+                    <div class="mb-4 d-inline-block p-3 rounded-circle" style="background-color: rgba(197, 168, 128, 0.1);">
+                        <i class="fas fa-swimming-pool fa-2x" style="color: var(--gold-color);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Hồ Bơi Vô Cực</h5>
+                    <p class="text-muted small mb-0">Tầm nhìn toàn cảnh thành phố Cần Thơ.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="service-box p-4 text-center rounded-3 bg-white h-100">
+                    <div class="mb-4 d-inline-block p-3 rounded-circle" style="background-color: rgba(197, 168, 128, 0.1);">
+                        <i class="fas fa-spa fa-2x" style="color: var(--gold-color);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Luxury Spa</h5>
+                    <p class="text-muted small mb-0">Liệu trình thư giãn chuyên sâu, tái tạo năng lượng.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="py-5 text-white text-center position-relative" style="background-color: var(--dark-blue);">
+    <div class="container position-relative" style="z-index: 2;">
+        <h2 class="fw-bold mb-3 display-6 font-serif">Cần hỗ trợ đặt phòng?</h2>
+        <a href="tel:0909000000" class="btn btn-gold btn-lg rounded-pill px-5 py-3 fw-bold shadow-lg">
+            <i class="fas fa-phone-alt me-2"></i> 0909.000.000
+        </a>
+    </div>
+</div>

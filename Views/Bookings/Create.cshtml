@@ -1,0 +1,179 @@
+﻿@model SunriseHotelApp.Models.Booking
+@{
+    ViewData["Title"] = "Xác nhận đặt phòng";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Dùng layout khách hàng
+
+    // LẤY DỮ LIỆU TỪ CONTROLLER
+    var roomType = ViewBag.RoomType as SunriseHotelApp.Models.RoomType;
+    var checkIn = ViewBag.CheckIn != null ? (DateTime)ViewBag.CheckIn : DateTime.Now;
+    var checkOut = ViewBag.CheckOut != null ? (DateTime)ViewBag.CheckOut : DateTime.Now.AddDays(1);
+    var totalDays = ViewBag.TotalDays != null ? (int)ViewBag.TotalDays : 1;
+    var roomTotal = ViewBag.RoomTotal != null ? (decimal)ViewBag.RoomTotal : 0;
+    var shuttlePrice = ViewBag.ShuttlePrice != null ? (decimal)ViewBag.ShuttlePrice : 200000;
+}
+
+@if (roomType == null)
+{
+    <div class="container py-5 text-center" style="margin-top: 100px;">
+        <div class="alert alert-danger shadow-sm">
+            <h4><i class="fas fa-exclamation-triangle"></i> Lỗi dữ liệu</h4>
+            <p>Không tìm thấy thông tin loại phòng. Vui lòng quay lại trang tìm kiếm.</p>
+            <a href="/Bookings/Search" class="btn btn-dark">Quay lại tìm kiếm</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container py-5" style="margin-top: 100px;">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <h2 class="fw-bold font-serif text-dark display-6">Hoàn tất đặt phòng</h2>
+                <a href="/Bookings/Search?checkIn=@checkIn.ToString("yyyy-MM-dd")&checkOut=@checkOut.ToString("yyyy-MM-dd")" class="text-decoration-none text-muted small hover-link">
+                    <i class="fas fa-arrow-left me-1"></i> Chọn phòng khác
+                </a>
+            </div>
+
+            <div class="col-lg-7 mb-4">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-user-circle me-2 text-warning"></i>Thông tin của bạn</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form asp-action="Create" method="post" id="bookingForm">
+                            <input type="hidden" name="RoomTypeId" value="@roomType.RoomTypeID" />
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">HỌ VÀ TÊN <span class="text-danger">*</span></label>
+                                    <input type="text" name="CustomerName" class="form-control bg-light border-0 p-3" required placeholder="Ví dụ: Nguyen Van A">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">SỐ ĐIỆN THOẠI <span class="text-danger">*</span></label>
+                                    <input type="tel" name="CustomerPhone" class="form-control bg-light border-0 p-3" required placeholder="Ví dụ: 0909xxxxxx">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">EMAIL</label>
+                                    <input type="email" name="CustomerEmail" class="form-control bg-light border-0 p-3" placeholder="name@example.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-muted">CCCD / CMND <span class="text-danger">*</span></label>
+                                    <input type="text" name="CustomerIdCard" class="form-control bg-light border-0 p-3" required>
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <div class="p-3 border rounded bg-white position-relative shadow-sm" style="background-color: #f8f9fa;">
+                                        <div class="form-check d-flex align-items-center">
+                                            <input class="form-check-input me-3" type="checkbox" id="shuttleCheckbox" name="IsShuttleService" value="true" style="transform: scale(1.3); cursor: pointer;">
+                                            <label class="form-check-label w-100 cursor-pointer" for="shuttleCheckbox" style="cursor: pointer;">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <span class="fw-bold d-block text-dark"><i class="fas fa-car me-2"></i>Dịch vụ đưa đón sân bay</span>
+                                                        <small class="text-muted">Xe riêng 4-7 chỗ đón tại sân bay Cần Thơ.</small>
+                                                    </div>
+                                                    <span class="fw-bold text-primary fs-5">+@shuttlePrice.ToString("N0")₫</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <label class="form-label small fw-bold text-muted">YÊU CẦU ĐẶC BIỆT</label>
+                                    <textarea name="Notes" class="form-control bg-light border-0" rows="3" placeholder="Ví dụ: Check-in muộn, phòng tầng cao, không hút thuốc..."></textarea>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="CheckInDate" value="@checkIn" />
+                            <input type="hidden" name="CheckOutDate" value="@checkOut" />
+                            <input type="hidden" name="TotalAmount" value="@roomTotal" />
+
+                            <button type="submit" class="btn btn-warning w-100 py-3 mt-4 fw-bold shadow-sm text-uppercase text-dark transition-btn">
+                                Xác nhận đặt phòng
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 120px; z-index: 1;">
+                    <div class="card-body p-4">
+                        <h5 class="font-serif fw-bold mb-3 border-bottom pb-2">Chi tiết đơn phòng</h5>
+
+                        <div class="d-flex mb-4">
+                            @{
+                                var imgSrc = string.IsNullOrEmpty(roomType.Image) ? "https://placehold.co/100x100" : roomType.Image;
+                            }
+                            <img src="@imgSrc" class="rounded me-3 shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
+
+                            <div>
+                                <h6 class="fw-bold mb-1">@roomType.RoomTypeName</h6>
+                                <div class="text-warning small mb-1">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <span class="badge bg-light text-dark border">@totalDays đêm</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2 small text-muted">
+                            <span>Nhận phòng:</span>
+                            <span class="fw-bold text-dark">@checkIn.ToString("dd/MM/yyyy")</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 small text-muted">
+                            <span>Trả phòng:</span>
+                            <span class="fw-bold text-dark">@checkOut.ToString("dd/MM/yyyy")</span>
+                        </div>
+
+                        <hr class="border-dashed opacity-50">
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Giá phòng:</span>
+                            <span class="fw-bold">@roomTotal.ToString("N0") ₫</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2 text-primary bg-light p-2 rounded" id="shuttleFeeRow" style="display: none;">
+                            <span><i class="fas fa-plus-circle me-1 small"></i>Phí xe đưa đón:</span>
+                            <span class="fw-bold">@shuttlePrice.ToString("N0") ₫</span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 fw-bold mb-0 text-muted">Tổng cộng:</span>
+                            <span class="h3 fw-bold text-danger mb-0" id="displayTotal">@roomTotal.ToString("N0") <small class="fs-6">₫</small></span>
+                        </div>
+                        <div class="text-end small text-muted mt-1">(Đã bao gồm thuế & phí)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('shuttleCheckbox');
+            const feeRow = document.getElementById('shuttleFeeRow');
+            const displayTotal = document.getElementById('displayTotal');
+
+            const roomPrice = @roomTotal;
+            const shuttlePrice = @shuttlePrice;
+
+            checkbox.addEventListener('change', function() {
+                let finalPrice = roomPrice;
+
+                if (this.checked) {
+                    // Hiện dòng phí xe
+                    feeRow.style.display = 'flex';
+                    // Cộng thêm tiền
+                    finalPrice += shuttlePrice;
+                } else {
+                    // Ẩn dòng phí xe
+                    feeRow.style.display = 'none';
+                }
+
+                // Cập nhật số tiền hiển thị (Format dấu phẩy)
+                displayTotal.innerHTML = finalPrice.toLocaleString('vi-VN') + ' <small class="fs-6">₫</small>';
+            });
+        });
+    </script>
+}

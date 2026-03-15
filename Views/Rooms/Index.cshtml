@@ -1,0 +1,107 @@
+﻿@model IEnumerable<SunriseHotelApp.Models.Room>
+
+@{
+    ViewData["Title"] = "Sơ đồ phòng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white shadow-sm rounded">
+        <h4 class="fw-bold text-uppercase text-dark m-0"><i class="fas fa-th me-2"></i> Sơ đồ tình trạng phòng</h4>
+        <div>
+            <span class="badge bg-success me-2 p-2 shadow-sm"><i class="fas fa-check me-1"></i> Trống</span>
+            <span class="badge bg-danger me-2 p-2 shadow-sm"><i class="fas fa-user me-1"></i> Có khách</span>
+            <span class="badge bg-warning text-dark p-2 shadow-sm"><i class="fas fa-broom me-1"></i> Đang dọn</span>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        @foreach (var item in Model)
+        {
+            <div class="col-xl-2 col-md-3 col-sm-4 col-6">
+
+                @if (item.RoomStatus == "Available")
+                {
+                    <div class="card h-100 border-success mb-3 shadow-sm room-card">
+                        <div class="card-header bg-success text-white fw-bold text-center">
+                            @item.RoomNumber
+                        </div>
+                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                            <small class="text-muted fw-bold">@item.RoomType.RoomTypeName</small>
+                            <div class="my-2 fs-1 text-success"><i class="fas fa-door-open"></i></div>
+                            <a href="/Bookings/Create?roomId=@item.RoomId" class="btn btn-outline-success btn-sm fw-bold rounded-pill stretched-link">
+                                <i class="fas fa-plus"></i> Nhận phòng
+                            </a>
+                        </div>
+                    </div>
+                }
+                else if (item.RoomStatus == "Occupied")
+                {
+                    <div class="card h-100 border-danger mb-3 shadow room-card bg-danger text-white">
+                        <div class="card-header bg-danger border-bottom border-white fw-bold text-center">
+                            @item.RoomNumber
+                        </div>
+                        <div class="card-body text-center p-2">
+                            <small class="d-block mb-1 text-white-50">@item.RoomType.RoomTypeName</small>
+                            <div class="mb-2 fs-4"><i class="fas fa-user-lock"></i></div>
+
+                            <div class="d-grid gap-2">
+                                <a href="/Bookings/AddService?roomId=@item.RoomId" class="btn btn-warning text-dark fw-bold btn-sm shadow-sm">
+                                    <i class="fas fa-utensils"></i> Gọi Món
+                                </a>
+
+                                <a href="/Bookings/Checkout?roomId=@item.RoomId" class="btn btn-light text-danger fw-bold btn-sm shadow-sm">
+                                    <i class="fas fa-file-invoice-dollar"></i> Trả Phòng
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    // --- PHÒNG ĐANG DỌN: THÊM NÚT XÁC NHẬN TẠI ĐÂY ---
+                    <div class="card h-100 border-warning mb-3 shadow-sm bg-warning text-dark">
+                        <div class="card-header bg-warning border-bottom border-dark fw-bold text-center">
+                            @item.RoomNumber
+                        </div>
+                        <div class="card-body text-center p-2 d-flex flex-column justify-content-between">
+                            <div>
+                                <small class="d-block mb-1 text-dark-50">@item.RoomType.RoomTypeName</small>
+                                <div class="mb-2 fs-4"><i class="fas fa-broom"></i></div>
+                            </div>
+
+                            @* Nút xác nhận dọn phòng để đưa phòng về trạng thái trống *@
+                            <form asp-action="FinishCleaning" asp-controller="Bookings" method="post">
+                                <input type="hidden" name="roomId" value="@item.RoomId" />
+                                <button type="submit" class="btn btn-dark text-white fw-bold btn-sm shadow-sm w-100">
+                                    <i class="fas fa-check"></i> Xong
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .room-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+        }
+
+    /* Tùy chỉnh màu vàng cho trạng thái dọn dẹp */
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+
+    .text-dark-50 {
+        color: rgba(0,0,0,0.5) !important;
+    }
+</style>

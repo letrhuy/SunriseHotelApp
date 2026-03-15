@@ -1,0 +1,69 @@
+﻿@model IEnumerable<SunriseHotelApp.Models.Booking>
+@{
+    ViewData["Title"] = "Báo cáo Doanh thu";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid pt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-success text-white py-3">
+            <h5 class="m-0 fw-bold"><i class="fas fa-chart-pie me-2"></i>BÁO CÁO DOANH THU</h5>
+        </div>
+        <div class="card-body p-4">
+
+            <form method="get" action="/Dashboard/RevenueReport" class="row g-3 mb-4 bg-light p-3 rounded">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-muted">Từ ngày:</label>
+                    <input type="date" name="fromDate" class="form-control" value="@ViewBag.FromDate">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-muted">Đến ngày:</label>
+                    <input type="date" name="toDate" class="form-control" value="@ViewBag.ToDate">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="fas fa-filter me-2"></i>Lọc Dữ Liệu</button>
+                </div>
+            </form>
+
+            <div class="alert alert-info text-center shadow-sm py-4 mb-4">
+                <h6 class="text-uppercase fw-bold mb-2">TỔNG DOANH THU TRONG KỲ</h6>
+                <h1 class="text-danger fw-bold m-0">@string.Format("{0:N0}", ViewBag.TotalRevenue) VNĐ</h1>
+            </div>
+
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>Mã HĐ</th>
+                        <th>Khách hàng</th>
+                        <th>Phòng</th>
+                        <th>Ngày Nhận</th>
+                        <th>Ngày Trả</th>
+                        <th class="text-end">Tiền thu (VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center fw-bold text-primary">HD-@item.BookingId</td>
+                                <td>@item.Customer?.FullName</td>
+                                <td class="text-center">@item.Room?.RoomNumber</td>
+                                <td class="text-center">@item.CheckInDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-center">@item.CheckOutDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-end fw-bold text-success">@string.Format("{0:N0}", item.FinalAmount)</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">Không có dữ liệu doanh thu trong khoảng thời gian này.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
